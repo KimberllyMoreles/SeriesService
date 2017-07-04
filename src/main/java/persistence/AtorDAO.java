@@ -5,49 +5,49 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import model.Cliente;
+import model.Ator;
 
-public class ClienteDAO {
+public class AtorDAO {
 
     private EntityManager em;
     private EntityManagerFactory emf;
 
-    public ClienteDAO() throws SQLException {
+    public AtorDAO() throws SQLException {
         this.emf = Persistence.createEntityManagerFactory("API_REST");
         this.em = this.emf.createEntityManager();
     }
 
-    public Cliente incluir(Cliente cliente) {
+    public Ator incluir(Ator ator) {
         try {
             em.getTransaction().begin();
-            em.persist(cliente);
+            em.persist(ator);
             em.getTransaction().commit();
         } catch (Exception e) {
             em.getTransaction().rollback();
             System.err.println(e.getMessage());
             throw e;
         }
-        return cliente;
+        return ator;
     }
 
-    public Cliente alterar(Cliente cliente) {
+    public Ator alterar(Ator ator) {
         try {
             em.getTransaction().begin();
-            em.merge(cliente);
+            em.merge(ator);
             em.getTransaction().commit();
         } catch (Exception e) {
             em.getTransaction().rollback();
             System.err.println(e.getMessage());
             throw e;
         }
-        return cliente;
+        return ator;
     }
 
-    public Boolean excluir(Cliente cliente) {
+    public Boolean excluir(Ator ator) {
         Boolean retorno;
         try {
             em.getTransaction().begin();
-            em.remove(cliente);
+            em.remove(ator);
             em.getTransaction().commit();
             retorno = true;
         } catch (Exception e) {
@@ -62,7 +62,7 @@ public class ClienteDAO {
     public Boolean excluir(int chaveprimaria) {
         Boolean retorno;
         try {
-            Cliente obj = this.buscarPorChavePrimaria(chaveprimaria);
+            Ator obj = this.buscarPorChavePrimaria(chaveprimaria);
             em.getTransaction().begin();
             em.remove(obj);
             em.getTransaction().commit();
@@ -76,11 +76,11 @@ public class ClienteDAO {
         return retorno;
     }
 
-    public List<Cliente> listar() {
-        return em.createNamedQuery("Cliente.findAll").getResultList();
+    public List<Ator> listar() {
+        return em.createNamedQuery("Ator.findAll").getResultList();
     }
 
-    public Cliente buscarPorChavePrimaria(int chaveprimaria) {
-        return em.find(Cliente.class, chaveprimaria);
+    public Ator buscarPorChavePrimaria(int chaveprimaria) {
+        return em.find(Ator.class, chaveprimaria);
     }
 }
