@@ -45,13 +45,13 @@ public class SerieAPI {
         return serie;
     }
 
-    @GET
+    /*@GET
     @Path("/serie/{id}/canal")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Canal> buscarSerieCanals(@DefaultValue("0") @PathParam("id") int id) {
         return serieDAO.buscarPorChavePrimaria(id).getCanals();
     }
-    
+    */
     @GET
     @Path("/serie/{id}/canal/{idcanal}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -75,7 +75,7 @@ public class SerieAPI {
     @Produces(MediaType.APPLICATION_JSON)
     public Canal inserirSerieCanal(@DefaultValue("0") @PathParam("id") int id, Canal canal) {
         Serie serie = serieDAO.buscarPorChavePrimaria(id);
-        canal.setSerie(serie);
+        //canal.setSerie(serie);
         return canalDAO.incluir(canal);
     }
 
@@ -98,7 +98,7 @@ public class SerieAPI {
     ) {
         Serie serie = serieDAO.buscarPorChavePrimaria(id);
         canal.setId(idcanal);
-        canal.setSerie(serie);
+        //canal.setSerie(serie);
         return canalDAO.alterar(canal);
     }
 
