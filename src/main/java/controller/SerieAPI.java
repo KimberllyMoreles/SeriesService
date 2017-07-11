@@ -17,7 +17,7 @@ import model.Canal;
 import persistence.SerieDAO;
 import persistence.CanalDAO;
 
-@Path("/api")
+@Path("/apiserie")
 public class SerieAPI {
 
     SerieDAO serieDAO;
@@ -45,13 +45,13 @@ public class SerieAPI {
         return serie;
     }
 
-    /*@GET
+    @GET
     @Path("/serie/{id}/canal")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Canal> buscarSerieCanals(@DefaultValue("0") @PathParam("id") int id) {
-        return serieDAO.buscarPorChavePrimaria(id).getCanals();
+    public Canal buscarSerieCanals(@DefaultValue("0") @PathParam("id") int id) {
+        return serieDAO.buscarPorChavePrimaria(id).getCanal();
     }
-    */
+    
     @GET
     @Path("/serie/{id}/canal/{idcanal}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -65,6 +65,8 @@ public class SerieAPI {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Serie inserirSerie(Serie serie) {
+        API api = new API();
+        serie.setPoster(api.storeImage(serie.getPoster()));
         serie = serieDAO.incluir(serie);
         return serie;
     }

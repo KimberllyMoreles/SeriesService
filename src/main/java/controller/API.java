@@ -1,4 +1,4 @@
-package helpers;
+package controller;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -16,15 +16,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/api")
 public class API {
     
-    protected String projectPath = "/home/diego/NetBeansProjects/api-images/src/main/webapp/";
+    protected String projectPath = "/home/aluno/NetBeansProjects/SerieService/src/main/webapp/";
     
-    @POST
-    @Path("/image")
-    @Produces(MediaType.APPLICATION_JSON)
-    public boolean storeImage(@FormParam("image") String image) {
+   
+    public String storeImage(@FormParam("image") String image) {
         try {
             String imageCode = image;
             String base64Image = imageCode.split(",")[1];
@@ -33,24 +30,10 @@ public class API {
             String imageNewName = System.currentTimeMillis() + ".jpg";
             File imageFile = new File(this.projectPath + "uploads/" + imageNewName);
             ImageIO.write(bufferedImage, "jpg", imageFile);
-            return true;
+            return imageNewName;
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
-            return false;
+            return "";
         }
     }
-
-    @GET
-    @Path("/image/{name}")
-    @Produces("image/jpg")
-    public Response getImage(@DefaultValue("0") @PathParam("name") String name) throws IOException {
-
-        BufferedImage image = ImageIO.read(new File(this.projectPath + "uploads/" + name));
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, "jpg", baos);
-        byte[] imageData = baos.toByteArray();
-        return Response.ok(new ByteArrayInputStream(imageData)).build();
-
-    }
-
 }

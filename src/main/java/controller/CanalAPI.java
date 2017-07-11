@@ -15,7 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import persistence.CanalDAO;
 
-@Path("/api")
+@Path("/apicanal")
 public class CanalAPI {
     
     CanalDAO canalDAO;

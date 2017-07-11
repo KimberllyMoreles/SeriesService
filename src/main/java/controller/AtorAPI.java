@@ -15,7 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import persistence.AtorDAO;
 
-@Path("/api")
+@Path("/apiator")
 public class AtorAPI {
     
     AtorDAO atorDAO;

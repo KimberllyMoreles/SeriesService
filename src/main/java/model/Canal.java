@@ -17,7 +17,7 @@ public class Canal implements Serializable {
     @Column
     private String nome;
     
-    @OneToMany(mappedBy = "produtor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "canal", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Serie> serie;
 
     public int getId() {

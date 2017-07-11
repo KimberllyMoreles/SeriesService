@@ -20,7 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import persistence.UsuarioDAO;
 
-@Path("/api")
+@Path("/apiusuario")
 public class UsuarioAPI {
 
     UsuarioDAO usuarioDAO;
