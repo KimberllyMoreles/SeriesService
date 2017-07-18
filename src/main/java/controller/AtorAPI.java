@@ -12,11 +12,14 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import persistence.AtorDAO;
 
 @Path("/apiator")
-public class AtorAPI {
+public class AtorAPI extends UsuarioAPI{
     
     AtorDAO atorDAO;
     
@@ -27,42 +30,73 @@ public class AtorAPI {
     @GET
     @Path("/ator")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Ator> listarAtors() {
+    public Response listarAtors(@Context HttpHeaders headers) {
+        
+        String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
         List<Ator> ators = atorDAO.listar();
-        return ators;
+        return Response.ok(ators).build();
     } 
     
     @GET
     @Path("/ator/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Ator buscarAtor(@DefaultValue("0") @PathParam("id") int id) {
+    public Response buscarAtor(@DefaultValue("0") @PathParam("id") int id, @Context HttpHeaders headers) {
+        
+         String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
         Ator ator = atorDAO.buscarPorChavePrimaria(id);
-        return ator;
+        return Response.ok(ator).build();
     }
     
     @POST
     @Path("/ator")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Ator inserirAtor(Ator ator) {
+    public Response inserirAtor(Ator ator, @Context HttpHeaders headers) {
+        
+        String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
         ator = atorDAO.incluir(ator);
-        return ator;
+        return Response.ok(ator).build();
     }
     
     @PUT
     @Path("/ator/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Ator alterarAtor(Ator ator) {
+    public Response alterarAtor(Ator ator, @Context HttpHeaders headers) {
+        
+        String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
         ator = atorDAO.alterar(ator);
-        return ator;
+        return Response.ok(ator).build();
     }
     
     @DELETE
     @Path("/ator/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Boolean excluirAtor(@DefaultValue("0") @PathParam("id") int id) {
-        return atorDAO.excluir(id);
+    public Response excluirAtor(@DefaultValue("0") @PathParam("id") int id, @Context HttpHeaders headers) {
+        
+        String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(atorDAO.excluir(id)).build();
     }
 
 }

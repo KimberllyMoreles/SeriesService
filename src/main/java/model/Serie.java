@@ -2,6 +2,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -22,8 +23,7 @@ public class Serie implements Serializable {
     
     @JoinColumn(name="canal_id")
     @ManyToOne
-    private Canal canal;
-    
+    private Canal canal;  
 
     public int getId() {
         return id;

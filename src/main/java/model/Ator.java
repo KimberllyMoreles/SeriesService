@@ -15,7 +15,7 @@ public class Ator implements Serializable {
 
     @Column
     private String nome;
-
+    
     public int getId() {
         return id;
     }

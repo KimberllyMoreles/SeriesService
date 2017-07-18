@@ -92,7 +92,7 @@ public class UsuarioAPI {
         return usuarioDAO.excluir(idusuario);
     }
 
-    private boolean checarToken(String token) {
+    protected boolean checarToken(String token) {
 
         String dadosLogin = "";
         try {

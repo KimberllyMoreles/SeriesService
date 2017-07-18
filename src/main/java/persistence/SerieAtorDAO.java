@@ -5,53 +5,49 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import model.Serie;
 import model.SerieAtor;
 
-public class SerieDAO {
+public class SerieAtorDAO {
 
     private EntityManager em;
     private EntityManagerFactory emf;
 
-    public SerieDAO() throws SQLException {
+    public SerieAtorDAO() throws SQLException {
         this.emf = Persistence.createEntityManagerFactory("API_REST");
         this.em = this.emf.createEntityManager();
     }
 
-    public Serie incluir(Serie serie) {
-        try {
-            //serie.getProdutor().setId(idprodutor);
-            em.getTransaction().begin();
-            em.persist(serie);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            System.err.println(e.getMessage());
-            throw e;
-        }       
-        
-        return serie;
-    }
-    
-
-    public Serie alterar(Serie serie) {
+    public SerieAtor incluir(SerieAtor serieAtor) {
         try {
             em.getTransaction().begin();
-            em.merge(serie);
+            em.persist(serieAtor);
             em.getTransaction().commit();
         } catch (Exception e) {
             em.getTransaction().rollback();
             System.err.println(e.getMessage());
             throw e;
         }
-        return serie;
+        return serieAtor;
     }
 
-    public Boolean excluir(Serie serie) {
+    public SerieAtor alterar(SerieAtor serieAtor) {
+        try {
+            em.getTransaction().begin();
+            em.merge(serieAtor);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.err.println(e.getMessage());
+            throw e;
+        }
+        return serieAtor;
+    }
+
+    public Boolean excluir(SerieAtor serieAtor) {
         Boolean retorno;
         try {
             em.getTransaction().begin();
-            em.remove(serie);
+            em.remove(serieAtor);
             em.getTransaction().commit();
             retorno = true;
         } catch (Exception e) {
@@ -66,7 +62,7 @@ public class SerieDAO {
     public Boolean excluir(int chaveprimaria) {
         Boolean retorno;
         try {
-            Serie obj = this.buscarPorChavePrimaria(chaveprimaria);
+            SerieAtor obj = this.buscarPorChavePrimaria(chaveprimaria);
             em.getTransaction().begin();
             em.remove(obj);
             em.getTransaction().commit();
@@ -80,11 +76,11 @@ public class SerieDAO {
         return retorno;
     }
 
-    public List<Serie> listar() {
-        return em.createNamedQuery("Serie.findAll").getResultList();
+    public List<SerieAtor> listar() {
+        return em.createNamedQuery("SerieAtor.findAll").getResultList();
     }
 
-    public Serie buscarPorChavePrimaria(int chaveprimaria) {
-        return em.find(Serie.class, chaveprimaria);
+    public SerieAtor buscarPorChavePrimaria(int chaveprimaria) {
+        return em.find(SerieAtor.class, chaveprimaria);
     }
 }

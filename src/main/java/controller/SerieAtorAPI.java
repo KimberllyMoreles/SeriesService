@@ -1,7 +1,7 @@
 package controller;
 
 import java.sql.SQLException;
-import model.Canal;
+import model.Ator;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -16,21 +16,30 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import persistence.CanalDAO;
+import model.SerieAtor;
+import persistence.AtorDAO;
+import persistence.SerieAtorDAO;
+import persistence.SerieDAO;
 
-@Path("/apicanal")
-public class CanalAPI extends UsuarioAPI{
+@Path("/apiserieator")
+public class SerieAtorAPI extends UsuarioAPI {
     
-    CanalDAO canalDAO;
+    /*AtorDAO atorDAO;
+    SerieDAO serieDAO;*/
+    SerieAtorDAO serieAtorDAO;
     
-    public CanalAPI() throws SQLException {
-        canalDAO = new CanalDAO();
+    
+    
+    public SerieAtorAPI() throws SQLException {
+        /*atorDAO = new AtorDAO();
+        serieDAO = new SerieDAO();*/
+        serieAtorDAO = new SerieAtorDAO();
     }  
 
     @GET
-    @Path("/canal")
+    @Path("/serieator")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listarCanals(@Context HttpHeaders headers) {
+    public Response listarAtores(@Context HttpHeaders headers) {
         
         String token = headers.getRequestHeader("Authorization").get(0);
 
@@ -38,14 +47,14 @@ public class CanalAPI extends UsuarioAPI{
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
         
-        List<Canal> canals = canalDAO.listar();
-        return Response.ok(canals).build();
+        List<SerieAtor> serieAtores = serieAtorDAO.listar();
+        return Response.ok(serieAtores).build();
     } 
     
     @GET
-    @Path("/canal/{id}")
+    @Path("/serieator/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buscarCanal(@DefaultValue("0") @PathParam("id") int id, @Context HttpHeaders headers) {
+    public Response buscarSerieAtor(@DefaultValue("0") @PathParam("id") int id, @Context HttpHeaders headers) {
         
         String token = headers.getRequestHeader("Authorization").get(0);
 
@@ -53,53 +62,52 @@ public class CanalAPI extends UsuarioAPI{
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
         
-        Canal canal = canalDAO.buscarPorChavePrimaria(id);
-        return Response.ok(canal).build();
+        SerieAtor serieAtor = serieAtorDAO.buscarPorChavePrimaria(id);
+        return Response.ok(serieAtor).build();
     }
     
     @POST
-    @Path("/canal")
+    @Path("/serieator")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response inserirCanal(Canal canal, @Context HttpHeaders headers) {
+    public Response inserirSerieAtor(SerieAtor serieAtor, @Context HttpHeaders headers) {
         
         String token = headers.getRequestHeader("Authorization").get(0);
 
         if (!this.checarToken(token)) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        canal = canalDAO.incluir(canal);
-        return Response.ok(canal).build();
+        
+        serieAtor = serieAtorDAO.incluir(serieAtor);
+        return Response.ok(serieAtor).build();
     }
     
     @PUT
-    @Path("/canal/{id}")
+    @Path("/serieator/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response alterarCanal(Canal canal, @Context HttpHeaders headers) {
+    public Response alterarAtor(SerieAtor serieAtor, @Context HttpHeaders headers) {
         
         String token = headers.getRequestHeader("Authorization").get(0);
 
         if (!this.checarToken(token)) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        
-        canal = canalDAO.alterar(canal);
-        return Response.ok(canal).build();
+        serieAtor = serieAtorDAO.alterar(serieAtor);
+        return Response.ok(serieAtor).build();
     }
     
     @DELETE
-    @Path("/canal/{id}")
+    @Path("/serieator/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response excluirCanal(@DefaultValue("0") @PathParam("id") int id, @Context HttpHeaders headers) {
+    public Response excluirAtor(@DefaultValue("0") @PathParam("id") int id, @Context HttpHeaders headers) {
         
         String token = headers.getRequestHeader("Authorization").get(0);
 
         if (!this.checarToken(token)) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        
-        return Response.ok(canalDAO.excluir(id)).build();
+        return Response.ok(serieAtorDAO.excluir(id)).build();
     }
 
 }

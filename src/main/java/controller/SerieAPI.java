@@ -12,13 +12,16 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import model.Canal;
 import persistence.SerieDAO;
 import persistence.CanalDAO;
 
 @Path("/apiserie")
-public class SerieAPI {
+public class SerieAPI extends UsuarioAPI{
 
     SerieDAO serieDAO;
     CanalDAO canalDAO;
@@ -32,91 +35,164 @@ public class SerieAPI {
     @GET
     @Path("/serie")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Serie> listarSeriees() {
+    public Response listarSeriees(@Context HttpHeaders headers) {
+        
+        String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
         List<Serie> seriees = serieDAO.listar();
-        return seriees;
+       return Response.ok(seriees).build();
     }
 
     @GET
     @Path("/serie/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Serie buscarSerie(@DefaultValue("0") @PathParam("id") int id) {
+    public Response buscarSerie(@DefaultValue("0") @PathParam("id") int id, @Context HttpHeaders headers) {
+        
+        String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
         Serie serie = serieDAO.buscarPorChavePrimaria(id);
-        return serie;
+        return Response.ok(serie).build();
     }
 
     @GET
     @Path("/serie/{id}/canal")
     @Produces(MediaType.APPLICATION_JSON)
-    public Canal buscarSerieCanals(@DefaultValue("0") @PathParam("id") int id) {
-        return serieDAO.buscarPorChavePrimaria(id).getCanal();
+    public Response buscarSerieCanals(@DefaultValue("0") @PathParam("id") int id, @Context HttpHeaders headers) {
+        
+         String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(serieDAO.buscarPorChavePrimaria(id).getCanal()).build();
     }
     
     @GET
     @Path("/serie/{id}/canal/{idcanal}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Canal buscarCanal(@DefaultValue("0") @PathParam("id") int id,
-            @DefaultValue("0") @PathParam("idcanal") int idcanal) {
-        return canalDAO.buscarPorChavePrimaria(idcanal);
+    public Response buscarCanal(@DefaultValue("0") @PathParam("id") int id,
+            @DefaultValue("0") @PathParam("idcanal") int idcanal, @Context HttpHeaders headers) {
+        
+         String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
+        return Response.ok(canalDAO.buscarPorChavePrimaria(idcanal)).build();
     }
 
     @POST
     @Path("/serie")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Serie inserirSerie(Serie serie) {
+    public Response inserirSerie(Serie serie, @Context HttpHeaders headers) {
+        
+        String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
         API api = new API();
         serie.setPoster(api.storeImage(serie.getPoster()));
         serie = serieDAO.incluir(serie);
-        return serie;
+        return Response.ok(serie).build();
     }
 
     @POST
     @Path("/serie/{id}/canal")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Canal inserirSerieCanal(@DefaultValue("0") @PathParam("id") int id, Canal canal) {
+    public Response inserirSerieCanal(@DefaultValue("0") @PathParam("id") int id, Canal canal, @Context HttpHeaders headers ) {
+        
+        
+        String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
+        
         Serie serie = serieDAO.buscarPorChavePrimaria(id);
         //canal.setSerie(serie);
-        return canalDAO.incluir(canal);
+        return Response.ok(canalDAO.incluir(canal)).build();
     }
 
     @PUT
     @Path("/serie/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Serie alterarSerie(Serie serie) {
+    public Response alterarSerie(Serie serie, @Context HttpHeaders headers) {
+        
+        String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
         serie = serieDAO.alterar(serie);
-        return serie;
+        return Response.ok(serie).build();
     }
 
     @PUT
     @Path("/serie/{id}/canal/{idcanal}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Canal alterarCanal(@DefaultValue("0") @PathParam("id") int id,
+    public Response alterarCanal(@DefaultValue("0") @PathParam("id") int id,
             @DefaultValue("0") @PathParam("idcanal") int idcanal,
-            Canal canal
+            Canal canal,
+            @Context HttpHeaders headers
     ) {
+        
+        
+        String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
         Serie serie = serieDAO.buscarPorChavePrimaria(id);
         canal.setId(idcanal);
         //canal.setSerie(serie);
-        return canalDAO.alterar(canal);
+        return Response.ok(canalDAO.alterar(canal)).build();
     }
 
     @DELETE
     @Path("/serie/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Boolean excluirSerie(@DefaultValue("0") @PathParam("id") int id) {
-        return serieDAO.excluir(id);
+    public Response excluirSerie(@DefaultValue("0") @PathParam("id") int id, @Context HttpHeaders headers) {
+        
+        String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
+        return Response.ok(serieDAO.excluir(id)).build();
     }
 
     @DELETE
     @Path("/serie/{id}/canal/{idcanal}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Boolean excluirSerieCanal(@DefaultValue("0") @PathParam("id") int id,
-            @DefaultValue("0") @PathParam("idcanal") int idcanal) {
-        return canalDAO.excluir(idcanal);
+    public Response excluirSerieCanal(@DefaultValue("0") @PathParam("id") int id,
+            @DefaultValue("0") @PathParam("idcanal") int idcanal, @Context HttpHeaders headers) {
+        
+        
+        String token = headers.getRequestHeader("Authorization").get(0);
+
+        if (!this.checarToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
+        return Response.ok(canalDAO.excluir(idcanal)).build();
     }
 
     
